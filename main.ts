@@ -48,9 +48,10 @@ let targetAngle = -110
 targetX = Math.cos(targetAngle * Math.PI / 180)
 targetY = Math.sin(targetAngle * Math.PI / 180)
 basic.showIcon(IconNames.Heart)
-kp = 0.1
-ki = 0.001
-kd = 0.5
+kp = 0.3
+ki = 0
+kd = 1.5
+let minSpeed = 0.5
 control.inBackground(function () {
     while (true) {
         magAbs = input.magneticForce(Dimension.Strength)
@@ -59,10 +60,10 @@ control.inBackground(function () {
         rotAngle = Math.atan2(yComp, xComp)
         if (input.buttonIsPressed(Button.A)) {
             speed = updatePID(xComp, yComp)
-            if (speed > 0) {
-                Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Reverse, Math.max(1, Math.abs(speed)))
+            if (speed < 0) {
+                Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Reverse, Math.max(minSpeed, Math.abs(speed)))
             } else {
-                Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Forward, Math.max(1, Math.abs(speed)))
+                Kitronik_Robotics_Board.motorOn(Kitronik_Robotics_Board.Motors.Motor1, Kitronik_Robotics_Board.MotorDirection.Forward, Math.max(minSpeed, Math.abs(speed)))
             }
         } else {
             Kitronik_Robotics_Board.motorOff(Kitronik_Robotics_Board.Motors.Motor1)
